@@ -1,10 +1,9 @@
+// // Copyright (C) 2023 Sunny Crowder-Sklar and Ethan Uppal. All rights reserved.
+
 function id(x) { return document.getElementById(x); }
+function classes(x) { return document.getElementsByClassName(x); }
 
-
-
-
-function main() {
-
+function main(chrome) {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const url = tabs[0].url;
         const domain = domainFromUrl(url);
@@ -12,15 +11,18 @@ function main() {
             const [ credibility, bias ] = MediaBias.lookup(domain);
             displayInfo(domain, credibility, bias);
         } catch (error) {
-            const errorSpan = id('error-span');
-            errorSpan.textContent = error;
-
-            const wrapper = id('info-wrapper');
-            wrapper.style.display = 'none';
-
+            id('error-time-span').textContent = (new Date()).toString();
+            id('error-span').textContent = error;
+            id('error-ctx-span').textContent = JSON.stringify({
+                domain: domain
+            });
             id("error").style.display = 'block';
+            for (const content of classes("content")) {
+                content.style.display = 'none';
+                content.style.visibility = 'hidden';
+            }
         }
-    })
+    });
 }
 
 // Stolen from stack
@@ -52,7 +54,6 @@ function displayInfo(domain, credibility, bias) {
 function showDomainOnGraph(canvas, domain, credibility, bias) {
     var offset_x = 50;
     var offset_y = 50;
-
     var ctx = canvas.getContext('2d');
 
     // draw current
@@ -72,4 +73,6 @@ function showDomainOnGraph(canvas, domain, credibility, bias) {
     ctx.fill();
 }
 
-main();
+// Make it compatible with the simulator
+// Falls back to just calling main directly if in chrome
+ChromeExtensionSimulator.run(main);

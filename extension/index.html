@@ -3,25 +3,30 @@
 
     <head>
         <meta charset="utf-8">
+        <script src="chrome-simulator.js"></script>
     </head>
-    
+
     <body >
         <div class="container">
             <div class="module">
-                <h1 class="title">Browser Extension Title</h1>
+                <h1 class="title">Rethinkify (idk)</h1>
             </div>
             <div class="error module" id="error">
-                <p><b>Error</b>: <span id="error-span"></span></p>
+                <p><b>Oops!</b> Something went wrong. Please see below for details.</p>
+                <pre>
+[Timestamp] <span id="error-time-span"></span>
+[Message] <span id="error-span"></span>
+[Context] <span id="error-ctx-span"></span></pre>
             </div>
-            <div class="module" id="info-wrapper">
+            <div class="content module">
                 <canvas id="graph" width="300px" height="300px" style="border:2px solid #FFFFFF"></canvas>
                 <p>Your domain <code><span id="domain-span"></span></code> has a credibility rating of <span id="credibility-span"></span> and a bias rating of <span id="bias-span"></span>.</p>
+                <hr />
             </div>
-            <div class="module">
-                
+            <div class="content module">
+                <p>Your source is <span id="bias-side-span"></span>biased. Consider viewing a source with a different persective.</p>
+                <button type="button" name="button" onclick="alert('lol doesnt do anything idk what this section should even look like this was just an idea')">Take me there!</button>
             </div>
-
-
         </div>
     </body>
     <style>
@@ -33,16 +38,24 @@
         .container {
             padding: 8px;
         }
+        canvas {
+            margin: auto;
+            display: block;
+        }
         .module {
             display: block;
         }
         .title {
             font-size: 24px;
             text-align: center;
+            font-family: "Comic Sans MS", "Comic Sans", cursive;
         }
         .error {
             color: red;
             display: none;
+        }
+        .error pre {
+            white-space: pre-wrap;
         }
     </style>
 

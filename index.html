@@ -1,0 +1,93 @@
+<!-- Copyright (C) 2023 Ethan Uppal. All rights reserved -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Chrome Browser Extension Simulator</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Chrome Browser Extension Simulator</h1>
+            <div style="flex: 1">
+                <p>Enter relative URL for source html<p>
+                <input type="text" placeholder="extension/popup.html" id="frame-input" oninput="loadFrame(this.value)">
+            </div>
+            <div style="display: flex;">
+                <div style="flex: 1">
+                    <p>Width = <span id="frame-width"></span>px<p>
+                    <input type="range" id="width-slider" value="600" min="10" max="1000" oninput="widthUpdated(this)">
+                </div>
+                <div style="flex: 1">
+                    <p>Height = <span id="frame-height"></span>px<p>
+                    <input type="range" id="height-slider" value="600" min="10" max="1000" oninput="heightUpdated(this)">
+                </div>
+                <div style="flex: 1">
+                    <p>Enter window url:</p>
+                    <input type="text" id="url-input" value="" placeholder="http://www.example.com">
+                    <button type="button" onclick="setUrl(this)">Load</button>
+                </div>
+            </div>
+        </div>
+
+        <iframe id="frame"></iframe>
+
+        <style media="screen">
+            body {
+                background-color: rgb(220, 220, 220);
+            }
+            .container {
+                max-width: 600px;
+                margin: auto;
+                border-style: solid;
+                padding: 8px;
+                margin-bottom: 8px;
+            }
+            #frame {
+                display: block;
+                margin: auto;
+                overflow: hidden;
+            }
+        </style>
+
+        <script>
+            var frame, frameInput, frameWidth, frameHeight, widthSlider, heightSlider, urlInput;
+            window.addEventListener('load', function() {
+                frame = document.getElementById('frame');
+                frameInput = document.getElementById('frame-input');
+                frameWidth = document.getElementById('frame-width');
+                frameHeight = document.getElementById('frame-height');
+                widthSlider = document.getElementById('width-slider');
+                heightSlider = document.getElementById('height-slider');
+                urlInput = document.getElementById('url-input');
+
+                var loadedSrc = localStorage.getItem('src');
+                if (loadedSrc !== undefined) {
+                    frameInput.value = loadedSrc;
+                    loadFrame(loadedSrc);
+                }
+            });
+            function loadFrame(src) {
+                frame.src = src;
+                window.localStorage.setItem('src', src);
+                widthUpdated(widthSlider);
+                heightUpdated(heightSlider);
+                // setUrl(undefined, 'abc.com');
+            }
+            function widthUpdated(range) {
+                var val = range.value;
+                frame.style.width = `${val}px`;
+                frameWidth.textContent = val;
+            }
+            function heightUpdated(range) {
+                var val = range.value;
+                frame.style.height = `${val}px`;
+                frameHeight.textContent = val;
+            }
+            function setUrl(button, url) {
+                frame.contentWindow.postMessage({
+                    url: url || urlInput.value
+                }, '*');
+            }
+        </script>
+    </body>
+</html>
