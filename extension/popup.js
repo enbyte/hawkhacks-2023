@@ -65,8 +65,9 @@ function showDomainOnGraph(canvas, domain, credibility, bias) {
 
     ctx.beginPath();
 
-    var x_coord = 200 * ((bias + 32) / (59));
-    var y_coord = 200 * ((credibility - 2) / (60));
+    var x_coord = 200 * ((parseInt(bias) + 32) / 59);
+    var y_coord = 200 - (200 * ((credibility - 2) / (60)));
+    alert(bias + " " + x_coord + " " +  y_coord)
     ctx.arc(offset_x + x_coord, offset_y + y_coord, 5, 0, 2 * Math.PI);
     ctx.font = "'Courier New' Courier monospace 10px";
     ctx.fillText(domain, offset_x + x_coord, offset_y + y_coord + 20);
