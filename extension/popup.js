@@ -47,6 +47,11 @@ function displayInfo(domain, credibility, bias) {
     domainSpan.textContent = domain;
     credibilitySpan.textContent = credibility;
     biasSpan.textContent = bias;
+    id("bias-side-span").textContent = (
+        (bias > 0) ? 'right-' : (
+            (bias < 0) ? 'left-' : 'un'
+        )
+    );
 
     showDomainOnGraph(graphCanvas, domain, credibility, bias);
 }
