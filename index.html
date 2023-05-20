@@ -3,54 +3,75 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title>Chrome Browser Extension Simulator</title>
+        <title>Chrome Extension Simulator</title>
     </head>
     <body>
         <div class="container">
-            <h1>Chrome Browser Extension Simulator</h1>
-            <div style="flex: 1">
-                <p>Enter relative URL for source html<p>
-                <input type="text" placeholder="extension/popup.html" id="frame-input" oninput="loadFrame(this.value)">
+            <h1>Chrome Extension Simulator</h1>
+            <p>This is a development environment that enables you to run Chrome browser extensions outside of Chrome. It is not yet complete, but currently allows setting the window location in a Chrome-compatible fashion.</p>
+            <h2>Development area</h2>
+            <div class="dev-area">
+                <div>
+                    <p>Enter relative URL for source html<p>
+                    <input type="text" placeholder="extension/popup.html" id="frame-input" oninput="loadFrame(this.value)">
+                </div>
+                <div class="flex-container">
+                    <div class="flex-item">
+                        <p>Width = <span id="frame-width"></span>px<p>
+                        <input type="range" id="width-slider" value="600" min="10" max="1000" oninput="widthUpdated(this)">
+                    </div>
+                    <div class="flex-item">
+                        <p>Height = <span id="frame-height"></span>px<p>
+                        <input type="range" id="height-slider" value="600" min="10" max="1000" oninput="heightUpdated(this)">
+                    </div>
+                    <div class="flex-item">
+                        <p>Enter window url:</p>
+                        <input type="text" id="url-input" value="" placeholder="http://www.example.com">
+                        <button type="button" onclick="setUrl(this)">Load</button>
+                    </div>
+                </div>
             </div>
-            <div style="display: flex;">
-                <div style="flex: 1">
-                    <p>Width = <span id="frame-width"></span>px<p>
-                    <input type="range" id="width-slider" value="600" min="10" max="1000" oninput="widthUpdated(this)">
-                </div>
-                <div style="flex: 1">
-                    <p>Height = <span id="frame-height"></span>px<p>
-                    <input type="range" id="height-slider" value="600" min="10" max="1000" oninput="heightUpdated(this)">
-                </div>
-                <div style="flex: 1">
-                    <p>Enter window url:</p>
-                    <input type="text" id="url-input" value="" placeholder="http://www.example.com">
-                    <button type="button" onclick="setUrl(this)">Load</button>
-                </div>
+            <div class="ext-area">
+                <h2>Extension embedded as <code>iframe</code></h2>
+                <iframe id="frame"></iframe>
             </div>
+            <p>The development environment is Copyright (C) 2023 Ethan Uppal. I do not make any claim over the source code at <code><span id="frame-loc"></span></code>.</p>
         </div>
 
-        <iframe id="frame"></iframe>
 
         <style media="screen">
             body {
                 background-color: rgb(220, 220, 220);
+                font-family: sans-serif;
             }
             .container {
                 max-width: 600px;
                 margin: auto;
-                border-style: solid;
                 padding: 8px;
+            }
+            .dev-area {
+                border-style: solid;
                 margin-bottom: 8px;
+                padding: 8px;
+                border-radius: 15px;
+            }
+            .flex-container {
+                display: flex;
+            }
+            .flex-item {
+                flex: 1;
             }
             #frame {
                 display: block;
-                margin: auto;
                 overflow: hidden;
+            }
+            .copyright {
+                font-size: 10px;
             }
         </style>
 
         <script>
-            var frame, frameInput, frameWidth, frameHeight, widthSlider, heightSlider, urlInput;
+            var frame, frameInput, frameWidth, frameHeight, widthSlider, heightSlider, urlInput, frameLoc;
             window.addEventListener('load', function() {
                 frame = document.getElementById('frame');
                 frameInput = document.getElementById('frame-input');
@@ -59,6 +80,7 @@
                 widthSlider = document.getElementById('width-slider');
                 heightSlider = document.getElementById('height-slider');
                 urlInput = document.getElementById('url-input');
+                frameLoc = document.getElementById('frame-loc');
 
                 var loadedSrc = localStorage.getItem('src');
                 if (loadedSrc !== undefined) {
@@ -68,10 +90,10 @@
             });
             function loadFrame(src) {
                 frame.src = src;
+                frameLoc.textContent = src;
                 window.localStorage.setItem('src', src);
                 widthUpdated(widthSlider);
                 heightUpdated(heightSlider);
-                // setUrl(undefined, 'abc.com');
             }
             function widthUpdated(range) {
                 var val = range.value;
