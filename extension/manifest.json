@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "WebContext",
-    "description": "WebContext: add context to claims on pages you view",
-    "version": "0.1",
+    "name": "Kaleidoscope",
+    "description": "Kaleidoscope: view bias of news sites and find articles on the other side of the aisle.",
+    "version": "1.3.35",
 
 
     "action":{
