@@ -3,6 +3,17 @@
 function id(x) { return document.getElementById(x); }
 function classes(x) { return document.getElementsByClassName(x); }
 
+
+// Stolen from stack
+function setCurrentPageUrl(newUrl) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs && tabs.length > 0) {
+        chrome.tabs.update(tabs[0].id, { url: newUrl });
+      }
+    });
+  }
+
+
 function main(chrome) {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const url = tabs[0].url;
@@ -36,6 +47,17 @@ function domainFromUrl(url) {
     }
     return result;
 }
+
+function fakeRedirect() {
+    alert("Located Keywords - Found article on site CNN.com about 'Debt limit', 'Biden', and 'McCarthy'\nRedirecting...");
+    setCurrentPageUrl('https://www.cnn.com/2023/05/21/politics/debt-ceiling-talks-biden-mccarthy/index.html');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById("take-me-there").addEventListener("click", fakeRedirect);
+  });
+
+
 
 function displayInfo(name, domain, credibility, bias) {
     const graphCanvas = id('graph');
@@ -124,4 +146,4 @@ function showSourceOnGraph(canvas, name, credibility, bias) {
 
 // Make it compatible with the simulator
 // Falls back to just calling main directly if in chrome
-ChromeExtensionSimulator.run(main);
+main(chrome);
