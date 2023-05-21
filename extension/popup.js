@@ -48,7 +48,7 @@ function displayInfo(name, domain, credibility, bias) {
     domainSpan.textContent = domain;
     credibilitySpan.textContent = credibility;
     biasSpan.textContent = bias;
-    id("bias-side-span").textContent = (
+    id("bias-side-span").textContent = ((Math.abs(bias) <= 5 && bias != 0) ? 'slightly ' : '') + (
         (bias > 0) ? 'right-' : (
             (bias < 0) ? 'left-' : 'un'
         )
