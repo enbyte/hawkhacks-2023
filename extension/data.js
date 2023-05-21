@@ -3,15 +3,20 @@ class MediaBias {
         throw new Error("Cannot construct abstract class MediaBias");
     }
 
-    static lookup(domain) {
+    static name(domain) {
         const name = MediaBias.domains[domain];
         if (name === undefined) {
             throw new Error("We don't have this domain in our database. Please contact us if you feel it should be added.");
         }
+        return name;
+    }
+    static lookup(domain) {
+        const name = MediaBias.name(domain);
         const data = MediaBias.data[name];
         if (data === undefined) {
             throw new Error("It seems that we have that website in our databse, but we don't have any data on it. Please contact us to let us know about this bug.")
         }
+        data.push(name);
         return data;
     }
 
@@ -137,5 +142,3 @@ class MediaBias {
         "Washington Post": ["51", "-10"]
     };
 }
-
-

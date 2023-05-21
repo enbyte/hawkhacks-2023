@@ -13,7 +13,7 @@
             <div class="dev-area">
                 <div>
                     <p>Enter relative URL for source html<p>
-                    <input type="text" placeholder="extension/popup.html" id="frame-input" oninput="loadFrame(this.value)">
+                    <input type="text" placeholder="extension/popup.html" id="frame-input" oninput="loadFrame(this.value)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                 </div>
                 <div class="flex-container">
                     <div class="flex-item">
@@ -26,7 +26,7 @@
                     </div>
                     <div class="flex-item">
                         <p>Enter window url:</p>
-                        <input type="text" id="url-input" value="" placeholder="http://www.example.com">
+                        <input type="text" id="url-input" value="" placeholder="http://www.example.com" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                         <button type="button" onclick="setUrl(this)">Load</button>
                     </div>
                 </div>
@@ -37,8 +37,6 @@
             </div>
             <p>The development environment is Copyright (C) 2023 Ethan Uppal. I do not make any claim over the source code at <code><span id="frame-loc"></span></code>.</p>
         </div>
-
-
         <style media="screen">
             body {
                 background-color: rgb(220, 220, 220);
@@ -95,6 +93,13 @@
                 widthUpdated(widthSlider);
                 heightUpdated(heightSlider);
             }
+            function reloadFrame(callback) {
+                const handler = frame.addEventListener('load', () => {
+                    callback(frame);
+                    frame.removeEventListener('load', handler);
+                });
+                frame.contentWindow.location.reload();
+            }
             function widthUpdated(range) {
                 var val = range.value;
                 frame.style.width = `${val}px`;
@@ -106,9 +111,11 @@
                 frameHeight.textContent = val;
             }
             function setUrl(button, url) {
-                frame.contentWindow.postMessage({
-                    url: url || urlInput.value
-                }, '*');
+                reloadFrame((frame) => {
+                    frame.contentWindow.postMessage({
+                        url: url || urlInput.value
+                    }, '*');
+                });
             }
         </script>
     </body>
